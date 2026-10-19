@@ -1,0 +1,24 @@
+# NEXORA — project folder.
+# The Next.js app (kads-labs-app) is the live NEXORA site; kads-labs-website
+# holds the original static-site template (source kept for reference).
+
+# heavy template media — available in the upstream template repo if ever needed:
+# https://github.com/gireeshkumarreddy/Teseract-creative-studious
+*.mp4
+kads-labs-website/public/assets/media/
+kads-labs-website/dist/
+
+# installed tool packages (reinstall with: cd _tools && npm install)
+node_modules/
+
+# Python caches
+__pycache__/
+*.pyc
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# stray tool logs at the project root (QA scripts write their logs in the session scratchpad)
+/*.log

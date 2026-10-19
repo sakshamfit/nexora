@@ -1,0 +1,13 @@
+{
+  "routes": 40,
+  "html_files": 40,
+  "errors": [],
+  "warnings": [
+    "6 SAMPLE testimonial(s) on Client Stories: preview only, replace before launch (LAUNCH-CHECKLIST.md 3c; check.py fails once indexable / site_url is set)",
+    "supplied image \"ecommerce-vyrn-categories\": source C:/Teseract-media/_supplied/ecommerce-vyrn-categories.png not found on this machine (prepared copy used)",
+    "supplied image \"interactive-3d-1-obscura\": source C:/Teseract-media/_supplied/interactive-3d-1-obscura.jpg not found on this machine (prepared copy used)",
+    "supplied image \"interactive-3d-2-faipy\": source C:/Teseract-media/_supplied/interactive-3d-2-faipy.jpg not found on this machine (prepared copy used)",
+    "supplied image \"website-design\": source C:/Teseract-media/_supplied/website-design.jpg not found on this machine (prepared copy used)",
+    "supplied image \"website-development\": source C:/Teseract-media/_supplied/website-development.jpg not found on this machine (prepared copy used)"
+  ]
+}
