@@ -140,18 +140,16 @@ the kinetic canvas behind it.
 `next.config.ts` uses `output: "export"`, so `npm run build` produces a fully
 static `out/` folder.
 
-A ready-made GitHub Actions workflow lives at
-[`deploy/pages.yml`](deploy/pages.yml) (this repo's automation token cannot
-create files under `.github/workflows/`, so it is stored here). To enable
-GitHub Pages deploys:
+The live [Nexora Vercel project](https://nexora-near-connect.vercel.app/) is
+linked to `sakshamfit/nexora`, with this directory as the project root and
+`main` as the production branch. It rebuilds when changes reach `main`; other
+branches are previews. See the root [README](../README.md#automatic-github-sync-and-deployment)
+for the opt-in local auto-sync script, safety checks, and setup.
 
-1. `cp kads-labs-app/deploy/pages.yml .github/workflows/pages.yml`
-2. Commit & push to `main` from your account
-3. Repo **Settings → Pages → Source: GitHub Actions**
-
-If the site is served from a project path such as
-`https://<user>.github.io/nexora/`, add `basePath: "/nexora"` to
-`next.config.ts` so asset URLs resolve.
+The inherited [`deploy/pages.yml`](deploy/pages.yml) is a **disabled template**,
+not the live deployment workflow. A GitHub Pages project-path deployment would
+also require configuring `basePath` and prefixing public image paths; it is not
+needed for the Vercel deployment.
 
 ## Nexora review selector
 
