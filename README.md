@@ -33,10 +33,68 @@ npm run dev        # http://localhost:3000
 npm run build      # static export -> kads-labs-app/out/
 ```
 
-Deploying: the site builds to a static `kads-labs-app/out/` (`npm run build`).
-For GitHub Pages, copy `kads-labs-app/deploy/pages.yml` to
-`.github/workflows/pages.yml`, push to `main` from your account, and enable
-**Settings → Pages → Source: GitHub Actions**.
+## Automatic GitHub sync and deployment
+
+Nexora's [GitHub repository](https://github.com/sakshamfit/nexora) is already
+linked to the **Nexora** Vercel project. Vercel builds `kads-labs-app/` and
+publishes [the live site](https://nexora-near-connect.vercel.app/) when a change
+reaches its production branch, `main`. Other branches receive preview
+deployments; they do **not** change the live site. The TESERACT repository is
+only a reference — this sync does not copy from or push to it.
+
+To sync changes from a local Nexora checkout, install Git, Node.js (22 or
+newer) and npm, and authenticate Git to GitHub using your normal credential
+helper or SSH key. In a terminal (Git Bash on Windows):
+
+```sh
+# From the repository root. Inspect the branch, destination and site changes:
+bash _tools/sync-github.sh --dry-run
+
+# Sync once, or leave the loop running to sync every 20 minutes:
+bash _tools/sync-github.sh
+bash _tools/sync-github.sh --loop 20
+```
+
+The loop runs **only while that process and machine/workspace are running**;
+closing the terminal or ending a cloud workspace stops it. To start it after
+reboot, use your system's scheduler to run the one-shot command every 20
+minutes, with Git and npm available on its PATH. Do not run it simultaneously
+from multiple schedulers. Ctrl+C stops the foreground loop. The first sync is
+immediate; the interval begins after each attempt finishes.
+
+The sync script:
+
+- Checks that `origin` has exactly one push URL for `sakshamfit/nexora`, then
+  commits and pushes **the currently checked-out branch**. It never switches
+  branches, merges, force-pushes, or pushes tags. Any existing unpushed commits
+  on that branch are also sent. Merge a non-`main` branch into `main` through
+  your usual review process to publish it to production.
+- Auto-stages only non-ignored changes in `kads-labs-app/`, not the rest of the
+  repository. Environment files and common private-key files (`.env*`,
+  `*.pem`, `*.key`, `*.p12`, `*.pfx`) are excluded even if already tracked.
+  This is not a complete secrets scanner: review your files and existing
+  commits before enabling unattended sync to this public repository.
+- Builds an isolated snapshot with `npm ci` and `npm run build` before making
+  an automatic commit; it does not disrupt the local `node_modules` or dev
+  server. Untracked/ignored `.env` files are not copied into the build. Supply
+  any required build-time environment variables through the process
+  environment instead. A failed build or a file edited during the build is not
+  committed or pushed; the loop reports the error and tries again later.
+- Stops if anything is already staged, so it never mixes a manual commit with
+  its own. It does not automatically pull/rebase if the remote is ahead. On a
+  failed push the new commit remains local; inspect the error, reconcile the
+  branches safely, then retry. If staging itself races with another Git
+  operation, inspect the index (`git diff --cached`) before retrying.
+
+If a Git hook changes the commit after validation, sync stops and writes a
+`.git/nexora-auto-sync.needs-review` marker. Review the commit and its build,
+then remove that marker to resume. A stale `.git/nexora-auto-sync.lock` can be
+removed **only after verifying no sync process is still running**. For script
+regression tests, run `python3 -m unittest discover -s _tools/tests -v`.
+
+The site also builds to static `kads-labs-app/out/`. The inherited GitHub Pages
+template in `kads-labs-app/deploy/pages.yml` is inactive; the existing live
+Vercel deployment above does not depend on GitHub Pages.
 
 ## Updated review UI and contact
 
